@@ -1,45 +1,79 @@
 <?php
-// Include your database connection file
-require 'config.php';
+require 'config.php'; // Include DB connection
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Collect and sanitize form data
-    $first_name = trim($_POST['first_name']) ?? '';
-    $last_name = trim($_POST['last_name']) ?? '';
-    $phone = trim($_POST['phone']) ?? '';
-    $email = trim($_POST['email']) ?? '';
-    $date_of_birth = $_POST['date_of_birth'] ?? '';
-    $password = $_POST['password'] ?? '';
+    $first_name = trim($_POST['first_name']);
+    $last_name = trim($_POST['last_name']);
+    $phone = trim($_POST['phone']);
+    $email = trim($_POST['email']);
+    $date_of_birth = $_POST['date_of_birth'];
+    $password = $_POST['password'];
 
-    // Validate form fields
-    if (!empty($first_name) && !empty($last_name) && !empty($phone) && !empty($email) && !empty($date_of_birth) && !empty($password)) {
-        // Hash the password before inserting into DB
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    // Backend validations
+    if (!preg_match("/^[A-Za-zāēīōūčģļņšžāčēīōū]+$/", $first_name) || !preg_match("/^[A-Za-zāēīōūčģļņšžāčēīōū]+$/", $last_name)) {
+        echo json_encode(["status" => "error", "message" => "First name and last name can only contain letters"]);
+        exit;
+    }
 
-        try {
-            // Prepare SQL statement with placeholders
-            $stmt = $pdo->prepare("INSERT INTO users (first_name, last_name, phone, email, dob, password) 
-                                   VALUES (:first_name, :last_name, :phone, :email, :dob, :password)");
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo json_encode(["status" => "error", "message" => "Invalid email format"]);
+        exit;
+    }
 
-            // Bind parameters to prevent SQL injection
-            $stmt->bindParam(':first_name', $first_name);
-            $stmt->bindParam(':last_name', $last_name);
-            $stmt->bindParam(':phone', $phone);
-            $stmt->bindParam(':email', $email);
-            $stmt->bindParam(':dob', $date_of_birth);
-            $stmt->bindParam(':password', $hashed_password);
+    // Check if email is unique
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
+    $stmt->bindParam(':email', $email);
+    $stmt->execute();
+    if ($stmt->rowCount() > 0) {
+        echo json_encode(["status" => "error", "message" => "Email is already taken"]);
+        exit;
+    }
 
-            // Execute the statement and check for success
-            if ($stmt->execute()) {
-                echo json_encode(["status" => "success", "message" => "User created successfully"]);
-            } else {
-                echo json_encode(["status" => "error", "message" => "Error: Could not create user"]);
-            }
-        } catch (PDOException $e) {
-            echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+    if (!preg_match("/^[0-9]{8}$/", $phone)) {
+        echo json_encode(["status" => "error", "message" => "Phone number must be exactly 8 digits"]);
+        exit;
+    }
+
+    if (new DateTime($date_of_birth) > new DateTime()) {
+        echo json_encode(["status" => "error", "message" => "Date of birth cannot be a future date"]);
+        exit;
+    }
+
+    // Backend password validation
+    // Backend password validation (inside your PHP script)
+if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{15,}$/", $password)) {
+    echo json_encode(["status" => "error", "message" => "Password must be at least 15 characters long, include uppercase and lowercase letters, digits, and special characters."]);
+    exit; // Stop further processing
+}
+
+
+
+
+    // Hash the password before inserting into DB
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+    try {
+        // Prepare SQL statement with placeholders
+        $stmt = $pdo->prepare("INSERT INTO users (first_name, last_name, phone, email, dob, password) 
+                               VALUES (:first_name, :last_name, :phone, :email, :dob, :password)");
+
+        // Bind parameters to prevent SQL injection
+        $stmt->bindParam(':first_name', $first_name);
+        $stmt->bindParam(':last_name', $last_name);
+        $stmt->bindParam(':phone', $phone);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':dob', $date_of_birth);
+        $stmt->bindParam(':password', $hashed_password);
+
+        // Execute the statement and check for success
+        if ($stmt->execute()) {
+            echo json_encode(["status" => "success", "message" => "User created successfully"]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Error: Could not create user"]);
         }
-    } else {
-        echo json_encode(["status" => "error", "message" => "All fields are required."]);
+    } catch (PDOException $e) {
+        echo json_encode(["status" => "error", "message" => $e->getMessage()]);
     }
 }
 ?>

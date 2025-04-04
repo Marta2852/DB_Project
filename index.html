@@ -3,27 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
     <title>Register</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Navigation Bar -->
+    <!-- Navigation Menu -->
     <nav>
-    <ul>
-        <!-- Added text to the "Sign Up" link so it displays properly -->
-        <li><a href="create.php">Sign Up</a></li>
-        <li><a href="showUsers.php">Show Users</a></li>
-        <li><a href="upload.php">Upload File</a></li>
-    </ul>
-</nav>
+        <ul>
+            <li><a href="#" id="createUserBtn">Create User</a></li>
+            <li><a href="#" id="showUsersBtn">Show Users</a></li>
+            <li><a href="#" id="uploadFileBtn">Upload File</a></li>
+        </ul>
+    </nav>
 
-    
-    <!-- Register Section -->
-    <div id="registerSection">
-        <h2>Create user</h2>
-        <!-- Updated form action to create.php -->
-        <form action="create.php" method="POST" id="userForm">
+    <!-- Create User Form Section -->
+    <section id="createUserSection" style="display: block;">
+        <h2>Create User</h2>
+        <form id="userForm">
             <input type="text" name="first_name" placeholder="First Name" required><br>
             <input type="text" name="last_name" placeholder="Last Name" required><br>
             <input type="text" name="phone" placeholder="Phone Number" required><br>
@@ -32,16 +29,22 @@
             <input type="password" name="password" placeholder="Password" required><br>
             <button type="submit">Sign Up</button>
         </form>
-    </div>
+    </section>
+
+    <!-- User List Section -->
+    <section id="userListSection" style="display: none;">
+        <h2>User List</h2>
+        <div id="usersTable">
+            <!-- User list will populate here -->
+        </div>
+    </section>
 
     <!-- Popup Modal -->
-    <div id="popup">
+    <div id="popup" style="display: none;">
         <div class="message"></div>
-        <button onclick="closePopup()">Close</button>
+        <button onclick="closePopup()">OK</button>
     </div>
 
-    <!-- Link to External JavaScript file -->
     <script src="script.js"></script>
-
 </body>
 </html>

@@ -34,7 +34,7 @@ nav a:hover {
 }
 
 /* Register Section Styling */
-#registerSection {
+#createUserSection {
     background: #2a2a2a;
     padding: 30px;
     border-radius: 10px;
@@ -71,6 +71,41 @@ button:hover {
     background-color: #ff1493;
 }
 
+/* User List Section Styling */
+#userListSection {
+    background: #2a2a2a;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(255, 105, 180, 0.5);
+    text-align: center;
+    width: 80%;
+    margin: 50px auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #444;
+    text-align: left;
+}
+
+th {
+    background-color: #444;
+}
+
+tr:nth-child(even) {
+    background-color: #333;
+}
+
+tr:hover {
+    background-color: #555;
+}
+
 /* Popup Styling */
 #popup {
     display: none; /* Hide by default */
@@ -83,33 +118,6 @@ button:hover {
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7); /* Darker shadow for depth */
-    z-index: 9999;
-    width: 100%;
-    max-width: 400px; /* Set a max width for the popup */
-    text-align: center;
-    font-family: 'Arial', sans-serif;
-}
-
-/* Message inside the popup */
-#popup .message {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    line-height: 1.4;
-}
-
-/* Button Styling in Popup */
-#popup {
-    display: none; /* Hidden by default */
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #333; /* Dark background to match the dark theme */
-    color: #fff; /* Light text color for readability */
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.9); /* Darker shadow for depth */
     z-index: 9999;
     width: 100%;
     max-width: 400px; /* Set a max width for the popup */
@@ -157,38 +165,4 @@ button:hover {
     height: 100%;
     background: rgba(0, 0, 0, 0.7); /* Dark overlay to focus on the popup */
     z-index: -1; /* Ensure it's behind the popup */
-}
-
-#userListSection {
-    background: #2a2a2a;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 15px rgba(255, 105, 180, 0.5);
-    text-align: center;
-    width: 80%;
-    margin: 50px auto;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-th, td {
-    padding: 10px;
-    border: 1px solid #444;
-    text-align: left;
-}
-
-th {
-    background-color: #444;
-}
-
-tr:nth-child(even) {
-    background-color: #333;
-}
-
-tr:hover {
-    background-color: #555;
 }
