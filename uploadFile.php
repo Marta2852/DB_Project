@@ -1,58 +1,56 @@
 <?php
-
-ini_set('display_errors', 1);
-ini_set('display_Startup_errors', 1);
-error_reporting(E_ALL);
-
-require_once 'config.php';
+require 'config.php'; // Include DB connection
 
 $successMessage = "";
+$errorMessage = "";
 
-if (isset($_FILES['uploadedFile'])){
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['uploadedFile'])) {
     $file = $_FILES['uploadedFile'];
     $fileName = $file['name'];
     $fileTmpName = $file['tmp_name'];
     $fileError = $file['error'];
-
     $uploadDir = "uploads/";
 
-    if (!is_dir($uploadDir)){
-        mkdir($uploadDir, 0777, true);
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true); // Create directory if it doesn't exist
     }
 
     $filePath = $uploadDir . basename($fileName);
 
-    if ($fileError === 0){
-        if (move_uploaded_file($fileTmpName, $filePath)){
-            $successMessage .= " File Successfully uploaded to folder. \n ";
+    if ($fileError === 0) {
+        if (move_uploaded_file($fileTmpName, $filePath)) {
+            $successMessage .= "File successfully uploaded to folder.\n";
 
-            $sql = "INSERT INTO upload_paths (file_name, file_path) VALUES (:fileName, :filePath)";
-            $stmt = $conn->prepare($sql);
+            // Insert file data into the database
+            $sql = "INSERT INTO files (file_name, file_path, upload_timestamp) VALUES (:fileName, :filePath, NOW())";
+            $stmt = $pdo->prepare($sql);
 
             try {
                 $stmt->execute([
                     ':fileName' => $fileName,
-                    'filePath' => $filePath
+                    ':filePath' => $filePath
                 ]);
 
-                if ($stmt->rowCount() > 0){
-                    $successMessage .= " File path saved in the database successfully! ";
+                if ($stmt->rowCount() > 0) {
+                    $successMessage .= "File path saved in the database successfully!";
                 } else {
-                    $successMessage .= "  Failed to save file in the database. ";
+                    $errorMessage .= "Failed to save file in the database.";
                 }
             } catch (PDOException $e) {
-                $successMessage .= " Error saving file to the database: " .$e->getMessage() . " ";
+                $errorMessage .= "Error saving file to the database: " . $e->getMessage();
             }
-
         } else {
-            $successMessage .= " Failed to upload file! ";
+            $errorMessage .= "Failed to upload file!";
         }
     } else {
-        $successMessage .= " Error uploading your file! ";
+        $errorMessage .= "Error uploading your file!";
     }
 }
 
-$conn = null;
-
-header("Location: index.html?successMessage=" . urlencode($successMessage));
-exit();
+// Respond with a success or error message
+if ($errorMessage) {
+    echo json_encode(["status" => "error", "message" => $errorMessage]);
+} else {
+    echo json_encode(["status" => "success", "message" => $successMessage]);
+}
+?>

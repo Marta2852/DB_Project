@@ -14,22 +14,28 @@
             <li><a href="#" id="createUserBtn">Create User</a></li>
             <li><a href="#" id="showUsersBtn">Show Users</a></li>
             <li><a href="#" id="uploadFileBtn">Upload File</a></li>
+            <li><a href="#" id="showFilesBtn">View Files</a></li>
         </ul>
     </nav>
 
     <!-- Create User Form Section -->
-    <section id="createUserSection" style="display: block;">
-        <h2>Create User</h2>
-        <form id="userForm">
-            <input type="text" name="first_name" placeholder="First Name" required><br>
-            <input type="text" name="last_name" placeholder="Last Name" required><br>
-            <input type="text" name="phone" placeholder="Phone Number" required><br>
-            <input type="email" name="email" placeholder="Email" required><br>
-            <input type="date" name="date_of_birth" required><br> 
-            <input type="password" name="password" placeholder="Password" required><br>
-            <button type="submit">Sign Up</button>
-        </form>
-    </section>
+<section id="createUserSection">
+    <h2>Create User</h2>
+    <form id="userForm">
+        <input type="text" name="first_name" id="firstName" placeholder="First Name" required><br>
+        <input type="text" name="last_name" id="lastName" placeholder="Last Name" required><br>
+        <input type="text" name="phone" id="phone" placeholder="Phone Number" required><br>
+        <input type="email" name="email" id="email" placeholder="Email" required><br>
+        <input type="date" name="date_of_birth" id="dob" required><br>
+        <input type="password" name="password" id="password" placeholder="Password" required><br>
+        <button type="submit" id="submitBtn">Sign Up</button>
+    </form>
+</section>
+
+<div id="popup" style="display: none;">
+    <div class="message"></div>
+    <button onclick="closePopup()">Close</button>
+</div>
 
     <!-- User List Section -->
     <section id="userListSection" style="display: none;">
@@ -39,11 +45,25 @@
         </div>
     </section>
 
-    <!-- Popup Modal -->
-    <div id="popup" style="display: none;">
-        <div class="message"></div>
-        <button onclick="closePopup()">OK</button>
-    </div>
+    <!-- Upload File Section -->
+    <section id="uploadFileSection" style="display: none;">
+        <h2>Upload File</h2>
+        <form id="fileForm" action="uploadFile.php" method="POST" enctype="multipart/form-data">
+            <input type="file" name="uploadedFile" id="uploadedFile" required />
+            <button type="submit">Upload File</button>
+        </form>
+        
+    </section>
+
+    <!-- View Files Section -->
+    <section id="viewFilesSection" style="display: none;">
+        <h2>Files</h2>
+        <div id="filesTable">
+            <!-- Files will populate here -->
+        </div>
+    </section>
+
+    
 
     <script src="script.js"></script>
 </body>

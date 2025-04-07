@@ -1,5 +1,5 @@
 <?php
-require 'config.php'; // Include DB connection
+require_once 'config.php'; // Include DB connection
 
 
 try {
